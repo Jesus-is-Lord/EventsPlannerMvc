@@ -9,10 +9,12 @@ using System.Data.Entity;
 
 namespace EventsPlannerMvc.Controllers
 {
+    [Authorize]
     public class EventsController : Controller
     {
         private EventsPlannerContext db = new EventsPlannerContext();
 
+        [AllowAnonymous]
         public ActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -57,6 +59,13 @@ namespace EventsPlannerMvc.Controllers
                 var currentLoggedInUser = db.Users.Where(u => u.Username.Equals(currentLoggedInUsername)).First();
                 @event.EventOwner = currentLoggedInUser.Id;
                 db.Events.Add(@event);
+                db.SaveChanges();
+                //now add an entry into the members table
+                var mem = new Member();
+                mem.Id = Guid.NewGuid();
+                mem.MemberOfUser = currentLoggedInUser.Id;
+                mem.MemberOfEvent = @event.Id;
+                db.Members.Add(mem);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
