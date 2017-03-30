@@ -6,11 +6,18 @@ using System.Web.Mvc;
 
 namespace EventsPlannerMvc.Controllers
 {
-    public class HomeController : Controller
+    public class EventsController : Controller
     {
         public ActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return View();
+            }
         }
 
     }
