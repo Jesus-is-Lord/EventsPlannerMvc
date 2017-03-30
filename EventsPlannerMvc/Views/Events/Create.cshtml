@@ -27,15 +27,15 @@
         <div>
             <br />
             <h4>Members</h4>
-            <table style="width:100%">
+            <table class="table">
                 <tr>
                     <th>Search</th>
                     <th>Invited Members</th>
                 </tr>
                 <tr>
                     <td>
-                        <input type="text" name="searchBox" placeholder="e.g. ramiz@test.com" />
-                        <button type="button" id="searchButton">Add</button>
+                        <input type="text" name="searchBox" placeholder="e.g. ramiz@test.com" class="my-form-control"/>
+                        <button type="button" id="searchButton" class="btn btn-default">Add</button>
                     </td>
                     <td>
                         <ul id="membersList">
@@ -73,10 +73,4 @@
 
         });
     </script>
-<style>
-    table, th, td {
-        border: 1px solid gray;
-        border-collapse: collapse;
-    }
-</style>
 }
