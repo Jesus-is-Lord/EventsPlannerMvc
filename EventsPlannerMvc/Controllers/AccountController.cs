@@ -17,6 +17,7 @@ namespace EventsPlannerMvc.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private EventsPlannerContext db = new EventsPlannerContext();
 
         public AccountController()
         {
@@ -76,6 +77,11 @@ namespace EventsPlannerMvc.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            // make sure user is also a domain user
+            if(!db.Users.Any(s=>s.Username.Equals(model.Email)))
+            {
+                result = new SignInStatus();
+            }
             switch (result)
             {
                 case SignInStatus.Success:
@@ -155,6 +161,14 @@ namespace EventsPlannerMvc.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    //create domain user also
+                    if(!db.Users.Any(u=>u.Username.Equals(model.Email)))
+                    {
+                        var domainUser = new User();
+                        domainUser.Id = Guid.NewGuid();
+                        db.Users.Add(domainUser);
+                        db.SaveChanges();
+                    }
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -163,7 +177,7 @@ namespace EventsPlannerMvc.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Events");
                 }
                 AddErrors(result);
             }
@@ -392,7 +406,7 @@ namespace EventsPlannerMvc.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Events");
         }
 
         //
@@ -449,7 +463,7 @@ namespace EventsPlannerMvc.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Events");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

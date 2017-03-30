@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<EventsPlannerMvc.Models.Event>
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -8,9 +9,42 @@
 </div>
 
 <div class="row">
-    @if(User.Identity.IsAuthenticated)
+    @if (User.Identity.IsAuthenticated)
+    {
+    <p>Start by creating a new <a href="Events/Create">Event</a></p>
+    }
+    @if(User.Identity.IsAuthenticated && Model.Count()>0)
     {
         <h2>Upcoming Events</h2>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.EventDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EventOwner)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EventDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.Username)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |                                                            
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+
+        </table>
     }
 
 </div>

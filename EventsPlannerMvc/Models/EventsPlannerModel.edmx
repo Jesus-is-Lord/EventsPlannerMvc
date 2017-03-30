@@ -1,0 +1,458 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="EventsPlannerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Events">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="EventDate" Type="datetime" Nullable="false" />
+          <Property Name="EventOwner" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Ideas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="varchar(max)" Nullable="false" />
+          <Property Name="IdeaOwner" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Members">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MemberOfEvent" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="MemberOfUser" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Firstname" Type="varchar" MaxLength="50" />
+          <Property Name="Lastname" Type="varchar" MaxLength="50" />
+          <Property Name="ProfilePhoto" Type="image" />
+        </EntityType>
+        <EntityType Name="VoteCodes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="CodeDescription" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Votes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Idea" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="VoteCode" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Voter" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Event_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Events" Type="Self.Events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Events">
+              <PropertyRef Name="EventOwner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ideas_Members">
+          <End Role="Members" Type="Self.Members" Multiplicity="1" />
+          <End Role="Ideas" Type="Self.Ideas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Ideas">
+              <PropertyRef Name="IdeaOwner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Members_Event">
+          <End Role="Events" Type="Self.Events" Multiplicity="1" />
+          <End Role="Members" Type="Self.Members" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Events">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Members">
+              <PropertyRef Name="MemberOfEvent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Members_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Members" Type="Self.Members" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Members">
+              <PropertyRef Name="MemberOfUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Votes_Ideas">
+          <End Role="Ideas" Type="Self.Ideas" Multiplicity="1" />
+          <End Role="Votes" Type="Self.Votes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ideas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Votes">
+              <PropertyRef Name="Idea" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Votes_Members">
+          <End Role="Members" Type="Self.Members" Multiplicity="1" />
+          <End Role="Votes" Type="Self.Votes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Votes">
+              <PropertyRef Name="Voter" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Votes_VoteCodes">
+          <End Role="VoteCodes" Type="Self.VoteCodes" Multiplicity="1" />
+          <End Role="Votes" Type="Self.Votes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VoteCodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Votes">
+              <PropertyRef Name="VoteCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EventsPlannerModelStoreContainer">
+          <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ideas" EntityType="Self.Ideas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Members" EntityType="Self.Members" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VoteCodes" EntityType="Self.VoteCodes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Votes" EntityType="Self.Votes" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Event_User" Association="Self.FK_Event_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Events" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ideas_Members" Association="Self.FK_Ideas_Members">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="Ideas" EntitySet="Ideas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Members_Event" Association="Self.FK_Members_Event">
+            <End Role="Events" EntitySet="Events" />
+            <End Role="Members" EntitySet="Members" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Members_User" Association="Self.FK_Members_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Members" EntitySet="Members" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Votes_Ideas" Association="Self.FK_Votes_Ideas">
+            <End Role="Ideas" EntitySet="Ideas" />
+            <End Role="Votes" EntitySet="Votes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Votes_Members" Association="Self.FK_Votes_Members">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="Votes" EntitySet="Votes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Votes_VoteCodes" Association="Self.FK_Votes_VoteCodes">
+            <End Role="VoteCodes" EntitySet="VoteCodes" />
+            <End Role="Votes" EntitySet="Votes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EventsPlannerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EventOwner" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Event_User" FromRole="Events" ToRole="Users" />
+          <NavigationProperty Name="Members" Relationship="Self.FK_Members_Event" FromRole="Events" ToRole="Members" />
+        </EntityType>
+        <EntityType Name="Idea">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IdeaOwner" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Member" Relationship="Self.FK_Ideas_Members" FromRole="Ideas" ToRole="Members" />
+          <NavigationProperty Name="Votes" Relationship="Self.FK_Votes_Ideas" FromRole="Ideas" ToRole="Votes" />
+        </EntityType>
+        <EntityType Name="Member">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MemberOfEvent" Type="Guid" Nullable="false" />
+          <Property Name="MemberOfUser" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Event" Relationship="Self.FK_Members_Event" FromRole="Members" ToRole="Events" />
+          <NavigationProperty Name="Ideas" Relationship="Self.FK_Ideas_Members" FromRole="Members" ToRole="Ideas" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Members_User" FromRole="Members" ToRole="Users" />
+          <NavigationProperty Name="Votes" Relationship="Self.FK_Votes_Members" FromRole="Members" ToRole="Votes" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Firstname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Lastname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProfilePhoto" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Events" Relationship="Self.FK_Event_User" FromRole="Users" ToRole="Events" />
+          <NavigationProperty Name="Members" Relationship="Self.FK_Members_User" FromRole="Users" ToRole="Members" />
+        </EntityType>
+        <EntityType Name="VoteCode">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CodeDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Votes" Relationship="Self.FK_Votes_VoteCodes" FromRole="VoteCodes" ToRole="Votes" />
+        </EntityType>
+        <EntityType Name="Vote">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Idea" Type="Guid" Nullable="false" />
+          <Property Name="VoteCode" Type="Guid" Nullable="false" />
+          <Property Name="Voter" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Idea1" Relationship="Self.FK_Votes_Ideas" FromRole="Votes" ToRole="Ideas" />
+          <NavigationProperty Name="Member" Relationship="Self.FK_Votes_Members" FromRole="Votes" ToRole="Members" />
+          <NavigationProperty Name="VoteCode1" Relationship="Self.FK_Votes_VoteCodes" FromRole="Votes" ToRole="VoteCodes" />
+        </EntityType>
+        <Association Name="FK_Event_User">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Events" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Events">
+              <PropertyRef Name="EventOwner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Members_Event">
+          <End Role="Events" Type="Self.Event" Multiplicity="1" />
+          <End Role="Members" Type="Self.Member" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Events">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Members">
+              <PropertyRef Name="MemberOfEvent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ideas_Members">
+          <End Role="Members" Type="Self.Member" Multiplicity="1" />
+          <End Role="Ideas" Type="Self.Idea" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Ideas">
+              <PropertyRef Name="IdeaOwner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Votes_Ideas">
+          <End Role="Ideas" Type="Self.Idea" Multiplicity="1" />
+          <End Role="Votes" Type="Self.Vote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ideas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Votes">
+              <PropertyRef Name="Idea" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Members_User">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Members" Type="Self.Member" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Members">
+              <PropertyRef Name="MemberOfUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Votes_Members">
+          <End Role="Members" Type="Self.Member" Multiplicity="1" />
+          <End Role="Votes" Type="Self.Vote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Votes">
+              <PropertyRef Name="Voter" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Votes_VoteCodes">
+          <End Role="VoteCodes" Type="Self.VoteCode" Multiplicity="1" />
+          <End Role="Votes" Type="Self.Vote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VoteCodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Votes">
+              <PropertyRef Name="VoteCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EventsPlannerContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Events" EntityType="Self.Event" />
+          <EntitySet Name="Ideas" EntityType="Self.Idea" />
+          <EntitySet Name="Members" EntityType="Self.Member" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="VoteCodes" EntityType="Self.VoteCode" />
+          <EntitySet Name="Votes" EntityType="Self.Vote" />
+          <AssociationSet Name="FK_Event_User" Association="Self.FK_Event_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Events" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Members_Event" Association="Self.FK_Members_Event">
+            <End Role="Events" EntitySet="Events" />
+            <End Role="Members" EntitySet="Members" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ideas_Members" Association="Self.FK_Ideas_Members">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="Ideas" EntitySet="Ideas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Votes_Ideas" Association="Self.FK_Votes_Ideas">
+            <End Role="Ideas" EntitySet="Ideas" />
+            <End Role="Votes" EntitySet="Votes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Members_User" Association="Self.FK_Members_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Members" EntitySet="Members" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Votes_Members" Association="Self.FK_Votes_Members">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="Votes" EntitySet="Votes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Votes_VoteCodes" Association="Self.FK_Votes_VoteCodes">
+            <End Role="VoteCodes" EntitySet="VoteCodes" />
+            <End Role="Votes" EntitySet="Votes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EventsPlannerModelStoreContainer" CdmEntityContainer="EventsPlannerContext">
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="EventsPlannerModel.Event">
+              <MappingFragment StoreEntitySet="Events">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="EventOwner" ColumnName="EventOwner" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ideas">
+            <EntityTypeMapping TypeName="EventsPlannerModel.Idea">
+              <MappingFragment StoreEntitySet="Ideas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="IdeaOwner" ColumnName="IdeaOwner" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Members">
+            <EntityTypeMapping TypeName="EventsPlannerModel.Member">
+              <MappingFragment StoreEntitySet="Members">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MemberOfEvent" ColumnName="MemberOfEvent" />
+                <ScalarProperty Name="MemberOfUser" ColumnName="MemberOfUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="EventsPlannerModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+                <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+                <ScalarProperty Name="ProfilePhoto" ColumnName="ProfilePhoto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VoteCodes">
+            <EntityTypeMapping TypeName="EventsPlannerModel.VoteCode">
+              <MappingFragment StoreEntitySet="VoteCodes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="CodeDescription" ColumnName="CodeDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Votes">
+            <EntityTypeMapping TypeName="EventsPlannerModel.Vote">
+              <MappingFragment StoreEntitySet="Votes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Idea" ColumnName="Idea" />
+                <ScalarProperty Name="VoteCode" ColumnName="VoteCode" />
+                <ScalarProperty Name="Voter" ColumnName="Voter" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

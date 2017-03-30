@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="cff8c063656744f3b21bda6f7b354650" Name="Diagram1">
+        <EntityTypeShape EntityType="EventsPlannerModel.Event" Width="1.5" PointX="7" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsPlannerModel.Idea" Width="1.5" PointX="1.375" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsPlannerModel.Member" Width="1.5" PointX="4.125" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsPlannerModel.User" Width="1.5" PointX="4.125" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsPlannerModel.VoteCode" Width="1.5" PointX="7.125" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsPlannerModel.Vote" Width="1.5" PointX="4.125" PointY="0.5" IsExpanded="true" />
+        <AssociationConnector Association="EventsPlannerModel.FK_Event_User" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsPlannerModel.FK_Members_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsPlannerModel.FK_Ideas_Members" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsPlannerModel.FK_Votes_Ideas" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsPlannerModel.FK_Members_User" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsPlannerModel.FK_Votes_Members" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsPlannerModel.FK_Votes_VoteCodes" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
