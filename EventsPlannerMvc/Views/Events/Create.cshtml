@@ -34,8 +34,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="text" name="searchBox" placeholder="e.g. ramiz@test.com" class="my-form-control"/>
+                        <input type="text" id="searchBox" placeholder="e.g. ramiz@test.com" class="my-form-control" autocomplete="off"/>
                         <button type="button" id="searchButton" class="btn btn-default">Add</button>
+                        <div hidden="hidden" id="ErrorMessage"><span class="text-danger">User not found.</span></div>
                     </td>
                     <td>
                         <ul id="membersList">
@@ -69,9 +70,40 @@
             });
 
             $("#searchButton").click(function () {
-                $("#membersList").prepend("<li>" + "test" + "</li>");
+                $("#ErrorMessage").hide();
+
+                var value = btoa($("#searchBox").val());
+                if (NotInList())
+                {
+                    $.getJSON('/Users/IsUserFound/' + value)
+                        .done(function (data) {
+                            if (data.Data.length === 0)
+                                $("#ErrorMessage").show();
+                            else {
+                                $("#membersList").prepend("<li>" + $("#searchBox").val() + "</li>");
+                            }
+                        })
+                        .fail(function (jqXHR, textStatus, err) {
+                            alert('Error: ' + err);
+                        });
+                }
             });
 
+            function NotInList()
+            {
+                var value = $("#searchBox").val();
+                //alert(value);
+                var list = document.getElementById('membersList');
+                var list_items = list.getElementsByTagName("li");
+                for (var i = 0; i < list_items.length; i++) {
+                    //alert('Value at position ' + i + ' is ' + list_items[i].innerHTML);
+                    if (list_items[i].innerHTML === value) {
+                        //alert("They are equal");
+                        return false;
+                    }
+                }
+                return true;
+            }
         });
     </script>
 }

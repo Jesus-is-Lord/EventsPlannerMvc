@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using EventsPlannerMvc.Models;
+using System.Threading.Tasks;
+using System.Text;
 
 namespace EventsPlannerMvc.Controllers
 {
@@ -34,6 +36,19 @@ namespace EventsPlannerMvc.Controllers
                 return HttpNotFound();
             }
             return View(user);
+        }
+
+        public JsonResult IsUserFound(string id)
+        {
+            byte[] data = Convert.FromBase64String(id);
+            string decodedString = Encoding.UTF8.GetString(data);
+
+            var model = db.Users.Where(u => u.Username.Equals(decodedString)).FirstOrDefault();
+            List<Boolean> result = new List<Boolean> { };
+            if (model != null)
+                result.Add(true);
+
+            return Json(new { Data = result }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Users/Create
