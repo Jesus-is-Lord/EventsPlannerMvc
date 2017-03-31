@@ -49,28 +49,33 @@ namespace EventsPlannerMvc.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,EventDate,EventOwner")] Event @event)
+        public ActionResult Create([Bind(Include = "Id,EventDate,EventOwner")] Event newEvent, string[] listOfMembers)
         {
             if (ModelState.IsValid)
             {
-                @event.Id = Guid.NewGuid();
+                newEvent.Id = Guid.NewGuid();
                 //set the event owner to current user
                 var currentLoggedInUsername = User.Identity.GetUserName();
                 var currentLoggedInUser = db.Users.Where(u => u.Username.Equals(currentLoggedInUsername)).First();
-                @event.EventOwner = currentLoggedInUser.Id;
-                db.Events.Add(@event);
+                newEvent.EventOwner = currentLoggedInUser.Id;
+                db.Events.Add(newEvent);
                 db.SaveChanges();
-                //now add an entry into the members table
-                var mem = new Member();
-                mem.Id = Guid.NewGuid();
-                mem.MemberOfUser = currentLoggedInUser.Id;
-                mem.MemberOfEvent = @event.Id;
-                db.Members.Add(mem);
+                //now add an entry into the members table for each username in listOfMembers
+                foreach (string member in listOfMembers)
+                { 
+                    var mem = new Member();
+                    mem.Id = Guid.NewGuid();
+                    //get user ID from users table based on the current username
+                    var userID = db.Users.Where(u => u.Username.Equals(member)).First().Id;
+                    mem.MemberOfUser = userID;
+                    mem.MemberOfEvent = newEvent.Id;
+                    db.Members.Add(mem);
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(@event);
+            return View(newEvent);
         }
 
 

@@ -9,7 +9,7 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "createEventForm" })) 
 {
     @Html.AntiForgeryToken()
     
@@ -41,6 +41,7 @@
                     <td>
                         <ul id="membersList">
                             <li>@User.Identity.GetUserName()</li>
+                            
                         </ul>
                     </td>
                 </tr>
@@ -49,7 +50,7 @@
         <br />
         <br />
         <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default" id="submitButton" name="submitButton"/>
         </div>
     </div>
 }
@@ -104,6 +105,42 @@
                 }
                 return true;
             }
+
+            function GetListOfMemberUsernames()
+            {
+                var result = [];
+                var list = document.getElementById('membersList');
+                var list_items = list.getElementsByTagName("li");
+                for (var i = 0; i < list_items.length; i++) {
+                    result.push(list_items[i].innerHTML);
+                }
+                return result;
+            }
+            
+
+
+            $("#createEventForm").submit(function (event) {
+
+                /* stop form from submitting normally */
+                event.preventDefault();
+
+                /* get the action attribute from the <form action=""> element */
+                var $form = $(this),
+                url = $form.attr('action');
+
+                var list = GetListOfMemberUsernames();
+                //alert('Length of array is: ' + list.length)
+                /* Send the data using post with element id name and name2*/
+                var posting = $.post(url, $(this).serialize() + '&' + $.param({ 'listOfMembers': list }));
+
+                /* Alerts the results */
+                posting.done(function (data) {
+                    window.location.replace("/Events/Index");
+                });
+            });
+
+
+
         });
     </script>
 }
