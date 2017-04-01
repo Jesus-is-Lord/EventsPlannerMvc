@@ -54,6 +54,74 @@ namespace EventsPlannerMvc.Controllers
             return View(@event);
         }
 
+        public ActionResult Edit(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Event @event = db.Events.Find(id);
+            if (@event == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.EventOwner = new SelectList(db.Users, "Id", "Username", @event.EventOwner);
+            return View(@event);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,EventDate,EventOwner")] Event @event)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(@event).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.EventOwner = new SelectList(db.Users, "Id", "Username", @event.EventOwner);
+            return View(@event);
+        }
+
+        public ActionResult Delete(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Event @event = db.Events.Find(id);
+            if (@event == null)
+            {
+                return HttpNotFound();
+            }
+            return View(@event);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(Guid id)
+        {
+            Event @event = db.Events.Find(id);
+
+            foreach(var m in @event.Members.ToList())
+            {
+                foreach (var i in m.Ideas.ToList())
+                {
+                    foreach (var v in i.Votes.ToList())
+                    {
+                        db.Votes.Remove(v);
+                    }
+                    db.Ideas.Remove(i);
+                }
+                db.Members.Remove(m);
+            }
+
+
+            db.Events.Remove(@event);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
         public ActionResult Create()
         {
             return View();
@@ -66,6 +134,8 @@ namespace EventsPlannerMvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,EventDate,EventOwner")] Event newEvent, string[] listOfMembers)
         {
+            if(newEvent.EventDate.Date<DateTime.Now.Date)
+                ModelState.AddModelError("EventDate", "The event date must be later than today.");
             if (ModelState.IsValid)
             {
                 if (listOfMembers == null || listOfMembers.Count() == 0)
@@ -89,10 +159,11 @@ namespace EventsPlannerMvc.Controllers
                     db.Members.Add(mem);
                 }
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                return Json(new { Data = true });
             }
 
-            return View(newEvent);
+            return Json(new { Data = false });
         }
 
 
