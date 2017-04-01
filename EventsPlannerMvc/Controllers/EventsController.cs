@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity;
+using System.Net;
 
 namespace EventsPlannerMvc.Controllers
 {
@@ -37,6 +38,20 @@ namespace EventsPlannerMvc.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult Details(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Event @event = db.Events.Find(id);
+            if (@event == null)
+            {
+                return HttpNotFound();
+            }
+            return View(@event);
         }
 
         public ActionResult Create()

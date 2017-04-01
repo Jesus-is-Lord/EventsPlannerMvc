@@ -1,0 +1,63 @@
+﻿@model EventsPlannerMvc.Models.Event
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Event</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.EventDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EventDate)
+        </dd>
+
+        <dt>
+            Event Owner
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Username)
+        </dd>
+        <dt>
+            Event Members
+        </dt>
+
+        <dd>
+            <ul>
+                @foreach (var m in Model.Members)
+                {
+                    <li>@m.User.Username</li>
+                }
+            </ul>
+        </dd>
+        <dt>
+            Event Ideas
+        </dt>
+
+        <dd>
+            <ul>
+                @foreach (var m in Model.Members)
+                {
+                    foreach (var i in m.Ideas)
+                    {
+                        <li><b>@i.Title</b><span>: </span>@i.Description</li>
+                    }
+                }
+            </ul>
+        </dd>
+    </dl>
+
+</div>
+        
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
