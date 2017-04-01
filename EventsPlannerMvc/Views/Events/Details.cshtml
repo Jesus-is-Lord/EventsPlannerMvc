@@ -1,4 +1,5 @@
-﻿@model EventsPlannerMvc.Models.Event
+﻿@using Microsoft.AspNet.Identity
+@model EventsPlannerMvc.Models.Event
 
 @{
     ViewBag.Title = "Details";
@@ -58,6 +59,16 @@
 </div>
         
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        <!--if event's owner is logged in user then show edit, else show 'Add Idea'-->
+        @if (Model.User.Username.Equals(User.Identity.GetUserName()))
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+            <span>|</span>
+        }
+        else
+        {
+            @Html.ActionLink("Add Idea", "AddIdea", new { id = Model.Id })
+            <span>|</span>
+        }
         @Html.ActionLink("Back to List", "Index")
     </p>

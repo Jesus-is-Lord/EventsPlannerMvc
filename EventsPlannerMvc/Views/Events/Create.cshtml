@@ -22,6 +22,7 @@
             <div class="col-md-12">
                 @Html.EditorFor(model => model.EventDate, new { htmlAttributes = new { @class = "form-control",autocomplete="off" } })
                 @Html.ValidationMessageFor(model => model.EventDate, "", new { @class = "text-danger" })
+                <div hidden="hidden" id="EventDateErrorMessage"><span class="text-danger">Event date must be later than today.</span></div>
             </div>
         </div>
         <div>
@@ -135,9 +136,7 @@
                 /* stop form from submitting normally */
                 event.preventDefault();
 
-                //var x = document.getElementById("EventDate");
-                //if (x.innerHTML === "")
-                    //return;
+                $("#EventDateErrorMessage").hide();
 
                 /* get the action attribute from the <form action=""> element */
                 var $form = $(this),
@@ -150,7 +149,11 @@
 
                 /* Alerts the results */
                 posting.done(function (data) {
-                    window.location.replace("/Events/Index");
+                    if (data.Data === false) {
+                        $("#EventDateErrorMessage").show();
+                    }
+                    else
+                        window.location.replace("/Events/Index");
                 });
             });
 
