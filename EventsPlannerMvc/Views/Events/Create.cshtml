@@ -65,16 +65,26 @@
 <link href="~/Content/jquery.datetimepicker.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.datetimepicker.full.js"></script>
     <script language="javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
+
+            $("#submitButton").attr('disabled', true);
+
             $("#EventDate").datetimepicker({
                 format: 'd/m/Y H:i'
+            });
+
+            $('#EventDate').focusout(function () {
+                if($('#EventDate').val()==="")
+                    $("#submitButton").attr('disabled', true);
+                else
+                    $("#submitButton").attr('disabled', false);
             });
 
             $("#searchButton").click(function () {
                 $("#ErrorMessage").hide();
 
                 var value = btoa($("#searchBox").val());
-                if (NotInList())
+                if (value!=="" && NotInList())
                 {
                     $.getJSON('/Users/IsUserFound/' + value)
                         .done(function (data) {
@@ -111,6 +121,7 @@
                 var result = [];
                 var list = document.getElementById('membersList');
                 var list_items = list.getElementsByTagName("li");
+                //alert(list_items.length);
                 for (var i = 0; i < list_items.length; i++) {
                     result.push(list_items[i].innerHTML);
                 }
@@ -124,13 +135,17 @@
                 /* stop form from submitting normally */
                 event.preventDefault();
 
+                //var x = document.getElementById("EventDate");
+                //if (x.innerHTML === "")
+                    //return;
+
                 /* get the action attribute from the <form action=""> element */
                 var $form = $(this),
                 url = $form.attr('action');
 
                 var list = GetListOfMemberUsernames();
                 //alert('Length of array is: ' + list.length)
-                /* Send the data using post with element id name and name2*/
+                /* Send the data using post */
                 var posting = $.post(url, $(this).serialize() + '&' + $.param({ 'listOfMembers': list }));
 
                 /* Alerts the results */

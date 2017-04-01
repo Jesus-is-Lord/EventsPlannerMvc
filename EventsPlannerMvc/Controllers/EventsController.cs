@@ -53,6 +53,8 @@ namespace EventsPlannerMvc.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (listOfMembers == null || listOfMembers.Count() == 0)
+                    throw new Exception();
                 newEvent.Id = Guid.NewGuid();
                 //set the event owner to current user
                 var currentLoggedInUsername = User.Identity.GetUserName();
