@@ -44,15 +44,26 @@
         </dt>
 
         <dd>
-            <ul>
+            <table class="table">
+                <tr>
+                    <th>Idea</th>
+                    <th>Idea Owner</th>
+                    <th>Number of Votes</th>
+                    <th>Rating</th>
+                </tr>
                 @foreach (var m in Model.Members)
                 {
                     foreach (var i in m.Ideas)
                     {
-                        <li><b>@i.Title</b><span>: </span>@i.Description</li>
+                        <tr>
+                            <td>@i.Title<span>: </span>@i.Description</td>
+                            <td>@i.Member.User.Username</td>
+                            <td>@i.Votes.Count</td>
+                            <td>@i.GetRating()</td>
+                        </tr>
                     }
                 }
-            </ul>
+            </table>
         </dd>
     </dl>
 
@@ -65,5 +76,6 @@
             @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
             <span>|</span>
         }
+        @Html.ActionLink("Add Idea", "AddIdea", new { id = Model.Id }) |
         @Html.ActionLink("Back to List", "Index")
     </p>

@@ -219,6 +219,7 @@
     <Compile Include="Models\Idea.cs">
       <DependentUpon>EventsPlannerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\IdeaPartial.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Member.cs">
@@ -319,6 +320,11 @@
     <Content Include="Views\Events\Details.cshtml" />
     <Content Include="Views\Events\Delete.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
+    <Content Include="Views\Ideas\Create.cshtml" />
+    <Content Include="Views\Ideas\Delete.cshtml" />
+    <Content Include="Views\Ideas\Details.cshtml" />
+    <Content Include="Views\Ideas\Edit.cshtml" />
+    <Content Include="Views\Ideas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
