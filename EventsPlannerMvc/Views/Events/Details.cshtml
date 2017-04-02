@@ -76,6 +76,6 @@
             @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
             <span>|</span>
         }
-        @Html.ActionLink("Add Idea", "AddIdea", new { id = Model.Id }) |
+        @Html.ActionLink("Add Idea", "Create", new { controller = "Ideas", id = Model.Id }) |
         @Html.ActionLink("Back to List", "Index")
     </p>
