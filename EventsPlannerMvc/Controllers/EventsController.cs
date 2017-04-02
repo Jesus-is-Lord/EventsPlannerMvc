@@ -65,22 +65,42 @@ namespace EventsPlannerMvc.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EventOwner = new SelectList(db.Users, "Id", "Username", @event.EventOwner);
             return View(@event);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,EventDate,EventOwner")] Event @event)
+        public ActionResult Edit([Bind(Include = "Id,EventDate,EventOwner")] Event @event, string[] listOfMembers)
         {
+            if (@event.EventDate.Date < DateTime.Now.Date)
+                ModelState.AddModelError("EventDate", "The event date must be later than today.");
             if (ModelState.IsValid)
             {
                 db.Entry(@event).State = EntityState.Modified;
+
+                if (listOfMembers == null || listOfMembers.Count() == 0)
+                    throw new Exception();
+
+                //now add an entry into the members table for each username in listOfMembers that doesn't already exist
+                foreach (string member in listOfMembers)
+                {
+                    if(!db.Members.Any(m=>m.User.Username.Equals(member) && m.MemberOfEvent.Equals(@event.Id)))
+                    {
+                        var mem = new Member();
+                        mem.Id = Guid.NewGuid();
+                        //get user ID from users table based on the current username
+                        var userID = db.Users.Where(u => u.Username.Equals(member)).First().Id;
+                        mem.MemberOfUser = userID;
+                        mem.MemberOfEvent = @event.Id;
+                        db.Members.Add(mem);
+                    }
+                    
+                }
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                return Json(new { Data = true });
             }
-            ViewBag.EventOwner = new SelectList(db.Users, "Id", "Username", @event.EventOwner);
-            return View(@event);
+            return Json(new { Data = false });
         }
 
         public ActionResult Delete(Guid? id)
