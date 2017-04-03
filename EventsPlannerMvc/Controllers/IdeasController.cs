@@ -71,6 +71,10 @@ namespace EventsPlannerMvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Title,Description,IdeaOwner")] Idea idea)
         {
+            if (idea.Title == null || idea.Title.Equals(""))
+                ModelState.AddModelError("Title", "Title is required");
+            if (idea.Description == null || idea.Description.Equals(""))
+                ModelState.AddModelError("Description", "Description is required");
             if (ModelState.IsValid)
             {
                 idea.Id = Guid.NewGuid();

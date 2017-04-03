@@ -60,6 +60,12 @@ namespace EventsPlannerMvc.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            //check logged in user is owner of event
+            var loggedInUsername = User.Identity.GetUserName();
+            if(!db.Events.Any(u=>u.Id==id && u.User.Username.Equals(loggedInUsername)))
+            {
+                return new HttpUnauthorizedResult();
+            }
             Event @event = db.Events.Find(id);
             if (@event == null)
             {
@@ -108,6 +114,12 @@ namespace EventsPlannerMvc.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            //check logged in user is owner of event
+            var loggedInUsername = User.Identity.GetUserName();
+            if (!db.Events.Any(u => u.Id == id && u.User.Username.Equals(loggedInUsername)))
+            {
+                return new HttpUnauthorizedResult();
             }
             Event @event = db.Events.Find(id);
             if (@event == null)

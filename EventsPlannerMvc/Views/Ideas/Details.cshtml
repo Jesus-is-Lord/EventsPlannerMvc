@@ -1,4 +1,5 @@
-﻿@model EventsPlannerMvc.Models.Idea
+﻿@using Microsoft.AspNet.Identity
+@model EventsPlannerMvc.Models.Idea
 
 @{
     ViewBag.Title = "Details";
@@ -28,16 +29,51 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Member.Id)
+            Idea Owner
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Member.Id)
+            @Html.DisplayFor(model => model.Member.User.Username)
         </dd>
+        <dt>
+            Rating
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GetRating)
+        </dd>
+        @if(Model.Votes.Count>0)
+        { 
+            <dt>
+                Idea Votes
+            </dt>
+            <dd>
+                <table class="table">
+                    <tr>
+                        <th>Voter</th>
+                        <th>Vote</th>
+                    </tr>
+                    @foreach (var v in Model.Votes)
+                    {
 
+                        <tr>
+                            <td>@v.Member.User.Username</td>
+                            <td>@v.GetVote</td>
+                        </tr>
+                    
+                    }
+                </table>
+            </dd>
+        }
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    <!--if event's owner is logged in user then show edit, else show 'Add Idea'-->
+    @if (Model.Member.User.Username.Equals(User.Identity.GetUserName()))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+        <span>|</span>
+    }
+    @Html.ActionLink("Add Vote", "Create", new { controller = "Votes", id = Model.Id }) |
+    @Html.ActionLink("Back to Ideas List", "Index")
 </p>
+

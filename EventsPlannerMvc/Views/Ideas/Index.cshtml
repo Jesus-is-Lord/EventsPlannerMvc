@@ -1,4 +1,5 @@
-﻿@model IEnumerable<EventsPlannerMvc.Models.Idea>
+﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<EventsPlannerMvc.Models.Idea>
 
 @{
     ViewBag.Title = "Index";
@@ -7,9 +8,6 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -22,7 +20,7 @@
             Idea Owner
         </th>
         <th>
-            Number of Votes
+            Date of Event
         </th>
         <th>
             Rating
@@ -42,15 +40,20 @@
             @Html.DisplayFor(modelItem => item.Member.User.Username)
         </td>
         <td>
-            @item.Votes.Count
+            @item.Member.Event.EventDate
         </td>
         <td>
-            @item.GetRating()
+            @item.GetRating
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Details", "Details", new { id = item.Id })
+            @if (User.Identity.GetUserName().Equals(item.Member.User.Username))
+            {
+                <span>|</span>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                <span>|</span>
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            }
         </td>
     </tr>
 }

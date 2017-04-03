@@ -39,32 +39,35 @@
                 }
             </ul>
         </dd>
-        <dt>
-            Event Ideas
-        </dt>
+        @if (Model.HasIdeas)
+        {
+            <dt>
+                Event Ideas
+            </dt>
 
-        <dd>
-            <table class="table">
-                <tr>
-                    <th>Idea</th>
-                    <th>Idea Owner</th>
-                    <th>Number of Votes</th>
-                    <th>Rating</th>
-                </tr>
-                @foreach (var m in Model.Members)
-                {
-                    foreach (var i in m.Ideas)
+            <dd>
+                <table class="table">
+                    <tr>
+                        <th>Idea</th>
+                        <th>Idea Owner</th>
+                        <th>Date of Event</th>
+                        <th>Rating</th>
+                    </tr>
+                    @foreach (var m in Model.Members)
                     {
-                        <tr>
-                            <td>@i.Title<span>: </span>@i.Description</td>
-                            <td>@i.Member.User.Username</td>
-                            <td>@i.Votes.Count</td>
-                            <td>@i.GetRating()</td>
-                        </tr>
+                        foreach (var i in m.Ideas)
+                        {
+                            <tr>
+                                <td>@i.Title<span>: </span>@i.Description</td>
+                                <td>@i.Member.User.Username</td>
+                                <td>@i.Member.Event.EventDate</td>
+                                <td>@i.GetRating</td>
+                            </tr>
+                        }
                     }
-                }
-            </table>
-        </dd>
+                </table>
+            </dd>
+        }
     </dl>
 
 </div>
@@ -77,5 +80,5 @@
             <span>|</span>
         }
         @Html.ActionLink("Add Idea", "Create", new { controller = "Ideas", id = Model.Id }) |
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Back to Events List", "Index")
     </p>

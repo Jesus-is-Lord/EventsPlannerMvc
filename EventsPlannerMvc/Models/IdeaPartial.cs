@@ -7,28 +7,31 @@ namespace EventsPlannerMvc.Models
 {
     public partial class Idea
     {
-        public decimal GetRating()
+        public decimal GetRating
         {
-            var total = 0;
-            var result = 0;
-            if (this.Votes.Count != 0)
+            get
             {
-                foreach (var v in this.Votes)
+                var total = 0;
+                var result = 0;
+                if (this.Votes.Count != 0)
                 {
-                    if (v.VoteCode.Equals("ONE_STAR"))
-                        total = total + 1;
-                    if (v.VoteCode.Equals("TWO_STAR"))
-                        total = total + 2;
-                    if (v.VoteCode.Equals("THREE_STAR"))
-                        total = total + 3;
-                    if (v.VoteCode.Equals("FOUR_STAR"))
-                        total = total + 4;
-                    if (v.VoteCode.Equals("FIVE_STAR"))
-                        total = total + 5;
+                    foreach (var v in this.Votes)
+                    {
+                        if (v.VoteCode1.Code.Equals("ONE_STAR"))
+                            total = total + 1;
+                        if (v.VoteCode1.Code.Equals("TWO_STAR"))
+                            total = total + 2;
+                        if (v.VoteCode1.Code.Equals("THREE_STAR"))
+                            total = total + 3;
+                        if (v.VoteCode1.Code.Equals("FOUR_STAR"))
+                            total = total + 4;
+                        if (v.VoteCode1.Code.Equals("FIVE_STAR"))
+                            total = total + 5;
+                    }
+                    result = total / Votes.Count;
                 }
-                result = total / Votes.Count;
+                return result;
             }
-            return result;
         }
     }
 }

@@ -202,6 +202,7 @@
     <Compile Include="Models\Event.cs">
       <DependentUpon>EventsPlannerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EventPartial.cs" />
     <Compile Include="Models\EventsPlannerModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -235,6 +236,7 @@
     <Compile Include="Models\VoteCode.cs">
       <DependentUpon>EventsPlannerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\VotePartial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
