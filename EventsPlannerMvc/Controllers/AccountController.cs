@@ -165,6 +165,7 @@ namespace EventsPlannerMvc.Controllers
                     if(!db.Users.Any(u=>u.Username.Equals(model.Email)))
                     {
                         var domainUser = new User();
+                        domainUser.Username = model.Email;
                         domainUser.Id = Guid.NewGuid();
                         db.Users.Add(domainUser);
                         db.SaveChanges();
