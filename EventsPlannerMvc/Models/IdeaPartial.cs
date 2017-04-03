@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace EventsPlannerMvc.Models
 {
+    [MetadataType(typeof(IdeaMetaData))]
     public partial class Idea
     {
         public decimal GetRating
@@ -33,5 +35,14 @@ namespace EventsPlannerMvc.Models
                 return result;
             }
         }
+    }
+
+    public class IdeaMetaData
+    {
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string Description { get; set; }
     }
 }
