@@ -18,6 +18,12 @@ namespace EventsPlannerMvc
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Events", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+            "Votes",                                              // Route name
+            "{controller}/{action}/{memberID}/{ideaID}",                           // URL with parameters
+            new { controller = "Home", action = "Index", memberID = "", ideaID = "" }  // Parameter defaults
+        );
         }
     }
 }

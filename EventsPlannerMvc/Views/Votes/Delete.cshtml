@@ -1,4 +1,4 @@
-﻿@model EventsPlannerMvc.Models.Idea
+﻿@model EventsPlannerMvc.Models.Vote
 
 @{
     ViewBag.Title = "Delete";
@@ -7,33 +7,33 @@
 
 <h2>Delete</h2>
 
-<h3 class="text-danger">Are you sure you want to delete this idea? All associated votes will be deleted also.</h3>
+<h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Idea</h4>
+    <h4>Vote</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.Idea1.Title)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.Idea1.Title)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Member.Id)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Member.Id)
         </dd>
 
         <dt>
-            Idea Owner
+            @Html.DisplayNameFor(model => model.VoteCode1.Code)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Member.User.Username)
+            @Html.DisplayFor(model => model.VoteCode1.Code)
         </dd>
 
     </dl>

@@ -195,6 +195,7 @@
     <Compile Include="Controllers\IdeasController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\VotesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -236,7 +237,6 @@
     <Compile Include="Models\VoteCode.cs">
       <DependentUpon>EventsPlannerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\VotePartial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -328,6 +328,11 @@
     <Content Include="Views\Ideas\Details.cshtml" />
     <Content Include="Views\Ideas\Edit.cshtml" />
     <Content Include="Views\Ideas\Index.cshtml" />
+    <Content Include="Views\Votes\Create.cshtml" />
+    <Content Include="Views\Votes\Delete.cshtml" />
+    <Content Include="Views\Votes\Details.cshtml" />
+    <Content Include="Views\Votes\Edit.cshtml" />
+    <Content Include="Views\Votes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

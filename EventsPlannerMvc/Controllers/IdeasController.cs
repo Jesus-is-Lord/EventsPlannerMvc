@@ -35,6 +35,11 @@ namespace EventsPlannerMvc.Controllers
             return View(ideas);
         }
 
+        public ActionResult GetEventIdeas(Guid id)
+        { 
+            return View("Index", db.Ideas.Where(e => e.Member.MemberOfEvent == id).ToList());
+        }
+
         // GET: Ideas/Details/5
         public ActionResult Details(Guid? id)
         {
@@ -94,11 +99,16 @@ namespace EventsPlannerMvc.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Idea idea = db.Ideas.Find(id);
+            //check logged in user is owner of event
+            var loggedInUsername = User.Identity.GetUserName();
+            if (!idea.Member.User.Username.Equals(loggedInUsername))
+            {
+                return new HttpUnauthorizedResult();
+            }
             if (idea == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.IdeaOwner = new SelectList(db.Members, "Id", "Id", idea.IdeaOwner);
             return View(idea);
         }
 
@@ -115,7 +125,6 @@ namespace EventsPlannerMvc.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.IdeaOwner = new SelectList(db.Members, "Id", "Id", idea.IdeaOwner);
             return View(idea);
         }
 
@@ -127,6 +136,12 @@ namespace EventsPlannerMvc.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Idea idea = db.Ideas.Find(id);
+            //make sure only Idea Owner can delete the idea
+            var loggedInUsername = User.Identity.GetUserName();
+            if (!idea.Member.User.Username.Equals(loggedInUsername))
+            {
+                return new HttpUnauthorizedResult();
+            }
             if (idea == null)
             {
                 return HttpNotFound();
@@ -140,7 +155,14 @@ namespace EventsPlannerMvc.Controllers
         public ActionResult DeleteConfirmed(Guid id)
         {
             Idea idea = db.Ideas.Find(id);
+
+            foreach (var v in idea.Votes.ToList())
+            {
+                db.Votes.Remove(v);
+            }
             db.Ideas.Remove(idea);
+
+
             db.SaveChanges();
             return RedirectToAction("Index");
         }

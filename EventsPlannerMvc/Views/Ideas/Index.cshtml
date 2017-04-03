@@ -25,6 +25,9 @@
         <th>
             Rating
         </th>
+        <th>
+            Votes List
+        </th>
         <th></th>
     </tr>
 
@@ -44,6 +47,9 @@
         </td>
         <td>
             @item.GetRating
+        </td>
+        <td>
+            @Html.ActionLink("View List", "Index", new { controller = "Votes", id = item.Id })
         </td>
         <td>
             @Html.ActionLink("Details", "Details", new { id = item.Id })
