@@ -14,23 +14,14 @@ namespace EventsPlannerMvc.Models
             get
             {
                 var total = 0;
-                var result = 0;
+                decimal result = 0;
                 if (this.Votes.Count != 0)
                 {
                     foreach (var v in this.Votes)
                     {
-                        if (v.VoteCode1.Code.Equals("ONE_STAR"))
-                            total = total + 1;
-                        if (v.VoteCode1.Code.Equals("TWO_STAR"))
-                            total = total + 2;
-                        if (v.VoteCode1.Code.Equals("THREE_STAR"))
-                            total = total + 3;
-                        if (v.VoteCode1.Code.Equals("FOUR_STAR"))
-                            total = total + 4;
-                        if (v.VoteCode1.Code.Equals("FIVE_STAR"))
-                            total = total + 5;
+                        total = total + v.VoteCode1.Value;
                     }
-                    result = total / Votes.Count;
+                    result = Decimal.Divide(total,Votes.Count);
                 }
                 return result;
             }
