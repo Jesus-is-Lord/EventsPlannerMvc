@@ -75,13 +75,6 @@
                 format: 'd/m/Y H:i'
             });
 
-            $('#EventDate').focusout(function () {
-                if($('#EventDate').val()==="")
-                    $("#submitButton").attr('disabled', true);
-                else
-                    $("#submitButton").attr('disabled', false);
-            });
-
             $("#searchButton").click(function () {
                 $("#ErrorMessage").hide();
 
