@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using EventsPlannerMvc.Models;
+using Microsoft.AspNet.Identity;
 
 namespace EventsPlannerMvc.Controllers
 {
@@ -21,39 +22,29 @@ namespace EventsPlannerMvc.Controllers
             return View(votes.ToList());
         }
 
-        // GET: Votes/Details/5
-        public ActionResult Details(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Vote vote = db.Votes.Find(id);
-            if (vote == null)
-            {
-                return HttpNotFound();
-            }
-            return View(vote);
-        }
-
         // GET: Votes/Create
         public ActionResult Create(Guid memberID, Guid ideaID)
         {
             ViewBag.VoteCode = new SelectList(db.VoteCodes.OrderBy(x => x.Value), "Id", "Code");
 
             //if this member voted for the idea before, update the vote with latest
-            var vv = db.Votes.Where(v => v.Voter == memberID && v.Idea == ideaID).FirstOrDefault();
+            var loggedInUsername = User.Identity.GetUserName();
+            var loggedInUserId = db.Users.Where(u => u.Username.Equals(loggedInUsername)).First().Id;
+            var idea = db.Ideas.Where(i => i.Id == ideaID).First();
+            var member = db.Members.Where(m => m.Id == memberID).First();
+            var rightMember = db.Members.Where(m => m.MemberOfEvent == member.MemberOfEvent && m.MemberOfUser == loggedInUserId).First();
+
+            var vv = db.Votes.Where(v => v.Voter == rightMember.Id && v.Idea == ideaID).FirstOrDefault();
             if (vv != null)
                 return View(vv);
             else
             {
                 Vote v = new Vote();
-                var idea = db.Ideas.Where(i => i.Id == ideaID).First();
-                var member = db.Members.Where(m => m.Id == memberID).First();
+
                 v.Idea = ideaID;
-                v.Voter = memberID;
+                v.Voter = rightMember.Id;
                 v.Idea1 = idea;
-                v.Member = member;
+                v.Member = rightMember;
 
 
                 return View(v);
@@ -85,69 +76,6 @@ namespace EventsPlannerMvc.Controllers
             }
             ViewBag.VoteCode = new SelectList(db.VoteCodes.OrderBy(x => x.Value), "Id", "Code");
             return View(vote);
-        }
-
-        // GET: Votes/Edit/5
-        public ActionResult Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Vote vote = db.Votes.Find(id);
-            if (vote == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.Idea = new SelectList(db.Ideas, "Id", "Title", vote.Idea);
-            ViewBag.Voter = new SelectList(db.Members, "Id", "Id", vote.Voter);
-            ViewBag.VoteCode = new SelectList(db.VoteCodes, "Id", "Code", vote.VoteCode);
-            return View(vote);
-        }
-
-        // POST: Votes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Idea,VoteCode,Voter")] Vote vote)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(vote).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.Idea = new SelectList(db.Ideas, "Id", "Title", vote.Idea);
-            ViewBag.Voter = new SelectList(db.Members, "Id", "Id", vote.Voter);
-            ViewBag.VoteCode = new SelectList(db.VoteCodes, "Id", "Code", vote.VoteCode);
-            return View(vote);
-        }
-
-        // GET: Votes/Delete/5
-        public ActionResult Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Vote vote = db.Votes.Find(id);
-            if (vote == null)
-            {
-                return HttpNotFound();
-            }
-            return View(vote);
-        }
-
-        // POST: Votes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
-        {
-            Vote vote = db.Votes.Find(id);
-            db.Votes.Remove(vote);
-            db.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

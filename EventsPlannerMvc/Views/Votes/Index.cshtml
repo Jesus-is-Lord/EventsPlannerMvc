@@ -10,32 +10,26 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Idea1.Title)
+            Idea
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Member.Id)
+            Voter
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.VoteCode1.Code)
+            Vote
         </th>
-        <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Idea1.Title)
+            @item.Idea1.Title<span>: </span> @item.Idea1.Description
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Member.Id)
+            @Html.DisplayFor(modelItem => item.Member.User.Username)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.VoteCode1.Code)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
         </td>
     </tr>
 }

@@ -329,9 +329,6 @@
     <Content Include="Views\Ideas\Edit.cshtml" />
     <Content Include="Views\Ideas\Index.cshtml" />
     <Content Include="Views\Votes\Create.cshtml" />
-    <Content Include="Views\Votes\Delete.cshtml" />
-    <Content Include="Views\Votes\Details.cshtml" />
-    <Content Include="Views\Votes\Edit.cshtml" />
     <Content Include="Views\Votes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
