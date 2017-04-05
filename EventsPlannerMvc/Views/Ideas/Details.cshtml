@@ -39,7 +39,7 @@
             Rating
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.GetRating)
+            <div class="my-rating jq-stars" data-rating=@Model.GetRating></div>
         </dd>
         @if(Model.Votes.Count>0)
         { 
@@ -57,7 +57,7 @@
 
                         <tr>
                             <td>@v.Member.User.Username</td>
-                            <td>@v.VoteCode1.Value</td>
+                            <td><div class="my-rating1 jq-stars" data-rating=@v.VoteCode1.Value></div></td>
                         </tr>
                     
                     }
@@ -76,4 +76,29 @@
     @Html.ActionLink("Add Vote", "Create", new { controller = "Votes", memberID = Model.Member.Id, ideaID=Model.Id }) |
     @Html.ActionLink("Back to Ideas List", "Index")
 </p>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+<link href="~/Content/star-rating-svg.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.star-rating-svg.js"></script>
+<script language="javascript">
+    $(document).ready(function () {
+        $(".my-rating").starRating({
+            starSize: 25,
+            readOnly: true
+
+        });
+
+        $(".my-rating1").starRating({
+            starSize: 19,
+            readOnly: true
+
+        });
+    });
+</script>
+
+
+
+}
 

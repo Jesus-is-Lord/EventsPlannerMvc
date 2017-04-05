@@ -46,7 +46,7 @@
             @item.Member.Event.EventDate
         </td>
         <td>
-            @item.GetRating
+            <div class="my-rating jq-stars" data-rating=@item.GetRating></div>
         </td>
         <td>
             @Html.ActionLink("View List", "Index", new { controller = "Votes", id = item.Id })
@@ -65,3 +65,23 @@
 }
 
 </table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <link href="~/Content/star-rating-svg.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.star-rating-svg.js"></script>
+    <script language="javascript">
+    $(document).ready(function () {
+
+        $(".my-rating").starRating({
+            starSize: 19,
+            readOnly: true
+
+        });
+    });
+    </script>
+
+
+
+}

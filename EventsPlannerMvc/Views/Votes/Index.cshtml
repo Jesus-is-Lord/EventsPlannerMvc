@@ -29,9 +29,29 @@
             @Html.DisplayFor(modelItem => item.Member.User.Username)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.VoteCode1.Code)
+            <div class="my-rating jq-stars" data-rating=@item.VoteCode1.Value></div>
         </td>
     </tr>
 }
 
 </table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <link href="~/Content/star-rating-svg.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.star-rating-svg.js"></script>
+    <script language="javascript">
+    $(document).ready(function () {
+
+        $(".my-rating").starRating({
+            starSize: 19,
+            readOnly: true
+
+        });
+    });
+    </script>
+
+
+
+}
