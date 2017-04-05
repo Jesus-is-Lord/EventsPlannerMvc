@@ -18,21 +18,42 @@
         
         @Html.HiddenFor(model => model.Idea, "Idea")
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.VoteCode, "VoteCode", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("VoteCode", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.VoteCode, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        @Html.DropDownList("VoteCode", null, htmlAttributes: new { @class = "hidden" })
+
+        <div class="my-rating jq-stars"></div>
 
         @Html.HiddenFor(model => model.Voter,"Voter")
         @Html.HiddenFor(model => model.Id,"Id")
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
+        <br />
+
+
+                <input type="submit" value="Submit" class="btn btn-default" />
+
     </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <link href="~/Content/star-rating-svg.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.star-rating-svg.js"></script>
+    <script language="javascript">
+    $(document).ready(function () {
+
+        $(".my-rating").starRating({
+            starSize: 40,
+            useFullStars: true,
+            initialRating: 0,
+            callback: function (currentRating, $el) {
+                //alert('rated ' + currentRating);
+                //console.log('DOM element ', $el);
+                $("#VoteCode").prop('selectedIndex', currentRating-1);
+            }
+        });
+    });
+    </script>
+
+
+
 }
