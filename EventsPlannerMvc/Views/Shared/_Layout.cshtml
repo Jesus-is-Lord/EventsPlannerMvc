@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -42,5 +44,37 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <style>
+        #round {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+    </style>
+    <script language="javascript">
+        $(document).ready(function () {
+
+            $.getJSON('/Users/IsUserProfilePhotoFound/')
+                .done(function (data) {
+                    if (data.Data.length === 0)
+                    {
+                        $("#profilePhoto").hide();
+                    }
+                    else {
+                        document.getElementById("profilePhoto").src = "data:image/jpg;base64," + data.Data;
+                    }
+                })
+                .fail(function (jqXHR, textStatus, err) {
+                    alert('Error: ' + err);
+                });
+
+
+
+
+        });
+
+    </script>
+
 </body>
 </html>

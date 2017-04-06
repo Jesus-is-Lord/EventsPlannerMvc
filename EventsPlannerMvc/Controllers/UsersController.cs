@@ -7,8 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using EventsPlannerMvc.Models;
-using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 using System.Text;
+using System.IO;
 
 namespace EventsPlannerMvc.Controllers
 {
@@ -16,12 +17,6 @@ namespace EventsPlannerMvc.Controllers
     public class UsersController : Controller
     {
         private EventsPlannerContext db = new EventsPlannerContext();
-
-        // GET: Users
-        public ActionResult Index()
-        {
-            return View(db.Users.ToList());
-        }
 
         // GET: Users/Details/5
         public ActionResult Details(Guid? id)
@@ -51,38 +46,35 @@ namespace EventsPlannerMvc.Controllers
             return Json(new { Data = result }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: Users/Create
-        public ActionResult Create()
+        [AllowAnonymous]
+        public JsonResult IsUserProfilePhotoFound()
         {
-            return View();
+            List<string> value = new List<string> { };
+            var result = Json(new { Data = value }, JsonRequestBehavior.AllowGet);
+
+            var loggedInUsername = User.Identity.GetUserName();
+
+            var model = db.Users.Where(u => u.Username.Equals(loggedInUsername)).FirstOrDefault();
+            if (model != null)
+                value.Add(Convert.ToBase64String(model.ProfilePhoto));
+
+            return result;
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Username,Firstname,Lastname,ProfilePhoto")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                user.Id = Guid.NewGuid();
-                db.Users.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(user);
-        }
+        
 
         // GET: Users/Edit/5
         public ActionResult Edit(Guid? id)
         {
+            User user = null;
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var loggedInUsername = User.Identity.GetUserName();
+                user = db.Users.Where(u => u.Username.Equals(loggedInUsername)).First();
             }
-            User user = db.Users.Find(id);
+            else
+                user = db.Users.Find(id);
+
             if (user == null)
             {
                 return HttpNotFound();
@@ -95,41 +87,29 @@ namespace EventsPlannerMvc.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Username,Firstname,Lastname,ProfilePhoto")] User user)
+        public ActionResult Edit([Bind(Include = "Id,Username,Firstname,Lastname,ProfilePhoto")] User user, HttpPostedFileBase image)
         {
+            if (Request.Files != null && Request.Files.Count > 0)
+            {
+                HttpPostedFileWrapper im = (HttpPostedFileWrapper)Request.Files[0];
+                if (!String.IsNullOrEmpty(im.FileName) && im.ContentType.Equals("image/jpeg"))
+                {
+                    byte[] fileData = null;
+                    using (var binaryReader = new BinaryReader(im.InputStream))
+                    {
+                        fileData = binaryReader.ReadBytes(Request.Files[0].ContentLength);
+                    }
+                    user.ProfilePhoto = fileData;
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Events");
             }
             return View(user);
-        }
-
-        // GET: Users/Delete/5
-        public ActionResult Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
-            return View(user);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
-        {
-            User user = db.Users.Find(id);
-            db.Users.Remove(user);
-            db.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
