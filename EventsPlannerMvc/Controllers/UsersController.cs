@@ -55,7 +55,7 @@ namespace EventsPlannerMvc.Controllers
             var loggedInUsername = User.Identity.GetUserName();
 
             var model = db.Users.Where(u => u.Username.Equals(loggedInUsername)).FirstOrDefault();
-            if (model != null)
+            if (model != null && model.ProfilePhoto!=null)
                 value.Add(Convert.ToBase64String(model.ProfilePhoto));
 
             return result;

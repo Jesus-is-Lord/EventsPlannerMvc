@@ -59,7 +59,7 @@
                 .done(function (data) {
                     if (data.Data.length === 0)
                     {
-                        $("#profilePhoto").hide();
+                        //$("#profilePhoto").hide();
                     }
                     else {
                         document.getElementById("profilePhoto").src = "data:image/jpg;base64," + data.Data;

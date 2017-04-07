@@ -243,6 +243,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\default-profile-photo.jpg" />
     <Content Include="Content\jquery.datetimepicker.css" />
     <Content Include="Content\star-rating-svg.css" />
     <Content Include="favicon.ico" />
@@ -271,6 +272,7 @@
     <Content Include="Models\EventsPlannerModel.edmx.diagram">
       <DependentUpon>EventsPlannerModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\EventsPlannerMvc20170407112041 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
