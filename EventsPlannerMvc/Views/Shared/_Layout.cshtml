@@ -44,6 +44,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    
     <style>
         #round {
             height: 50px;
@@ -59,7 +60,7 @@
                 .done(function (data) {
                     if (data.Data.length === 0)
                     {
-                        //$("#profilePhoto").hide();
+                        alert("this shouldn't happen");
                     }
                     else {
                         document.getElementById("profilePhoto").src = "data:image/jpg;base64," + data.Data;

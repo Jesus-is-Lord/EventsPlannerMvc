@@ -49,14 +49,22 @@ namespace EventsPlannerMvc.Controllers
         [AllowAnonymous]
         public JsonResult IsUserProfilePhotoFound()
         {
+            // get the default profile photo and be ready to set it for any user with no profile photo
+            var dir = Server.MapPath("/Content");
+            var path = Path.Combine(dir, "default-profile-photo" + ".jpg");
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+
+
             List<string> value = new List<string> { };
             var result = Json(new { Data = value }, JsonRequestBehavior.AllowGet);
 
             var loggedInUsername = User.Identity.GetUserName();
 
             var model = db.Users.Where(u => u.Username.Equals(loggedInUsername)).FirstOrDefault();
-            if (model != null && model.ProfilePhoto!=null)
+            if (model != null && model.ProfilePhoto != null)
                 value.Add(Convert.ToBase64String(model.ProfilePhoto));
+            else
+                value.Add(Convert.ToBase64String(fileBytes));
 
             return result;
         }
