@@ -12,7 +12,7 @@
 <div class="row">
     @if (User.Identity.IsAuthenticated)
     {
-    <p>Start by creating a new <a href="Events/Create">Event</a></p>
+    <p>Start by creating a new @Html.ActionLink("Events","Create")</p>
     }
     @if(User.Identity.IsAuthenticated && Model.Count()>0)
     {

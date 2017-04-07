@@ -19,14 +19,15 @@ namespace EventsPlannerMvc.Controllers
         public ActionResult Index()
         {
             List<Idea> ideas = new List<Idea>();
+
             var loggedInUsername = User.Identity.GetUserName();
             var loggedInUserID = db.Users.Where(u => u.Username.Equals(loggedInUsername)).First().Id;
             var memberEntries = db.Members.Where(m => m.MemberOfUser == loggedInUserID);
-            foreach(var m in memberEntries)
+            foreach (var m in memberEntries)
             {
                 //get all ideas belonging to the current event
                 var e = m.Event.Members;
-                foreach(var mm in e)
+                foreach (var mm in e)
                 {
                     ideas.AddRange(mm.Ideas);
                 }
